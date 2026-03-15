@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/local-interloper/mc-radar/mcradar/internal/consts"
+	"github.com/local-interloper/mc-radar/mcradar/internal/settings"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/mcpacket"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/mcstatus"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/mcstring"
@@ -33,7 +33,7 @@ type McConnection struct {
 
 func Connect(params Params) (*McConnection, error) {
 	d := net.Dialer{
-		Timeout: consts.TimeoutTime,
+		Timeout: settings.Timeout,
 	}
 
 	con, err := d.Dial("tcp", net.JoinHostPort(params.Address, strconv.FormatUint(uint64(params.Port), 10)))
@@ -110,7 +110,7 @@ func (m *McConnection) GetServerType() (servertype.ServerType, error) {
 }
 
 func (m *McConnection) ReadPacket(packet *mcpacket.McPacket) error {
-	m.connection.SetDeadline(time.Now().Add(consts.TimeoutTime))
+	m.connection.SetDeadline(time.Now().Add(settings.Timeout))
 	if err := packet.FromStream(m.reader); err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (m *McConnection) ReadPacket(packet *mcpacket.McPacket) error {
 }
 
 func (m *McConnection) SendPacket(packet *mcpacket.McPacket) error {
-	m.connection.SetDeadline(time.Now().Add(consts.TimeoutTime))
+	m.connection.SetDeadline(time.Now().Add(settings.Timeout))
 	if err := packet.ToStream(m.writer); err != nil {
 		return err
 	}

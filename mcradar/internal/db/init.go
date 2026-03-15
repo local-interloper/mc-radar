@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/local-interloper/mc-radar/mcradar/internal/consts"
+	"github.com/local-interloper/mc-radar/mcradar/internal/settings"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/knownserverstore"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -29,7 +29,7 @@ func Init() {
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err.Error())
+		log.Panicln(err)
 	}
 
 	Ctx = context.Background()
@@ -41,8 +41,8 @@ func Init() {
 		log.Fatal(err)
 	}
 
-	db.SetMaxOpenConns(consts.Splits)
-	db.SetMaxIdleConns(consts.Splits)
+	db.SetMaxOpenConns(settings.Splits)
+	db.SetMaxIdleConns(settings.Splits)
 	db.SetConnMaxLifetime(time.Hour)
 
 	servers, err := gorm.G[Server](DB).Select("ip").Find(Ctx)

@@ -4,8 +4,8 @@ import (
 	"math"
 	"sync"
 
-	"github.com/local-interloper/mc-radar/mcradar/internal/consts"
 	"github.com/local-interloper/mc-radar/mcradar/internal/db"
+	"github.com/local-interloper/mc-radar/mcradar/internal/settings"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/mcconnection"
 	"github.com/local-interloper/mc-radar/mcradar/internal/types/servertype"
 	"gorm.io/gorm"
@@ -15,8 +15,8 @@ import (
 func BeginFullRangeScan() {
 	var wg sync.WaitGroup
 
-	for i := uint32(0); i < consts.Splits-1; i++ {
-		segment := uint32(math.MaxUint32 / consts.Splits)
+	for i := uint32(0); i < uint32(settings.Splits)-1; i++ {
+		segment := uint32(math.MaxUint32 / settings.Splits)
 
 		wg.Go(func() { ScanAndAddToDatabase(db.DB.Session(&gorm.Session{}), segment*i, segment*(i+1)) })
 	}
