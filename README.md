@@ -17,7 +17,7 @@ mc-radar is a monorepo containing two services:
 
 ### mcradar (scanner)
 
-Splits the full 32-bit IPv4 address space into 2048 parallel goroutines, connects to port `25565` on each address using a hand-rolled Minecraft Java Edition protocol implementation, and stores every live server it finds into a PostgreSQL database.
+Splits the full 32-bit IPv4 address space into a configurable number of parallel goroutines, connects to port `25565` on each address using a hand-rolled Minecraft Java Edition protocol implementation, and stores every live server it finds into a PostgreSQL database.
 
 For each discovered server it records:
 
@@ -82,20 +82,15 @@ The API listens on port `8000`.
 
 All configuration is done via environment variables. Copy `.example.env` to `.env` and adjust as needed:
 
-| Variable            | Description                        | Default           |
-|---------------------|------------------------------------|-------------------|
-| `API_KEY`           | Bearer token for API auth          | —                 |
-| `POSTGRES_HOST`     | PostgreSQL host                    | `mc-radar-db`     |
-| `POSTGRES_PASSWORD` | PostgreSQL password                | —                 |
-| `POSTGRES_DB`       | PostgreSQL database name           | `postgres`        |
-
-The number of parallel scan goroutines is controlled by `mcradar/internal/consts/settings.go`:
-
-```go
-const Splits = 2048
-```
-
-The connection timeout per host is `500 ms` (`mcradar/internal/consts/settings.go`).
+| Variable                   | Description                              | Default       |
+|----------------------------|------------------------------------------|---------------|
+| `API_KEY`                  | Bearer token for API auth                | —             |
+| `POSTGRES_HOST`            | PostgreSQL host                          | `mc-radar-db` |
+| `POSTGRES_PASSWORD`        | PostgreSQL password                      | —             |
+| `POSTGRES_DB`              | PostgreSQL database name                 | `postgres`    |
+| `POSTGRES_MAX_CONNECTIONS` | Max PostgreSQL connections               | —             |
+| `APP_WORKERS`              | Number of parallel scan goroutines       | —             |
+| `APP_TIMEOUT_MS`           | Connection timeout per host (ms)         | —             |
 
 ## API
 

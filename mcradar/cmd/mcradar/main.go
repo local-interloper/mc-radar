@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sync"
+
 	"github.com/joho/godotenv"
 	"github.com/local-interloper/mc-radar/mcradar/internal/db"
 	"github.com/local-interloper/mc-radar/mcradar/internal/scanning"
@@ -8,11 +10,15 @@ import (
 )
 
 func main() {
+	wg := &sync.WaitGroup{}
+
 	godotenv.Load()
 
 	settings.Init()
 
 	db.Init()
 
-	scanning.BeginFullRangeScan()
+	scanning.BeginFullRangeScan(wg)
+
+	wg.Wait()
 }

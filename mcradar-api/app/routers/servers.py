@@ -1,9 +1,8 @@
 from fastapi import APIRouter
 from psycopg.rows import dict_row
 from pydantic import BaseModel, ConfigDict
-import pypika.functions
 from models import Server
-from typing import List, Optional
+from typing import Optional
 import pypika
 from pydantic.alias_generators import to_camel
 from models.pagination import Pagination

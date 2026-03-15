@@ -12,16 +12,14 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func BeginFullRangeScan() {
-	var wg sync.WaitGroup
+func BeginFullRangeScan(wg *sync.WaitGroup) {
+	for {
+		for i := uint32(0); i < uint32(settings.Splits)-1; i++ {
+			segment := uint32(math.MaxUint32 / settings.Splits)
 
-	for i := uint32(0); i < uint32(settings.Splits)-1; i++ {
-		segment := uint32(math.MaxUint32 / settings.Splits)
-
-		wg.Go(func() { ScanAndAddToDatabase(db.DB.Session(&gorm.Session{}), segment*i, segment*(i+1)) })
+			wg.Go(func() { ScanAndAddToDatabase(db.DB.Session(&gorm.Session{}), segment*i, segment*(i+1)) })
+		}
 	}
-
-	wg.Wait()
 }
 
 func ScanAndAddToDatabase(dbs *gorm.DB, from uint32, to uint32) {
