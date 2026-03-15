@@ -1,8 +1,9 @@
 services:
   mc-radar:
-    container_name: mc-radar
-    image: local-interloper/mc-radar
-    build: .
+    container_name: mcradar
+    image: local-interloper/mcradar
+    build:
+      context: ./mcradar
 
     env_file: .env
 
@@ -13,17 +14,32 @@ services:
     networks:
       - mc-radar-network
 
-  db:
-    container_name: mc-radar-db
-    image: postgres:18.3
-    restart: unless-stopped
-    shm_size: 128mb
-    command: -c 'max_connections=512'
+  api:
+    container_name: mcradar-api
+    image: local-interloper/mcradar-api
+    build:
+      context: ./mcradar-api
 
     env_file: .env
 
+    depends_on:
+      db:
+        condition: service_healthy
+
     ports:
-      - ${POSTGRES_PORT}:5432
+      - "8000:8000"
+
+    networks:
+      - mc-radar-network
+
+  db:
+    container_name: mcradar-db
+    image: postgres:18.3
+    restart: unless-stopped
+    shm_size: 128mb
+    command: -c 'max_connections=4096'
+
+    env_file: .env
 
     volumes:
       - "mc-radar-db-volume:/var/lib/postgresql/18/docker"
