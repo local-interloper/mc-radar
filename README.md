@@ -105,6 +105,8 @@ All configuration is done via environment variables. Copy `.example.env` to `.en
 | `APP_WORKERS`              | Number of parallel scan goroutines       | —             |
 | `APP_TIMEOUT_MS`           | Connection timeout per host (ms)         | —             |
 | `APP_GUI_PORT`             | Host port for the GUI                    | `3000`        |
+| `APP_API_URL`              | API URL used by the GUI (host:port)      | —             |
+| `APP_API_PROTOCOL`         | Protocol for GUI → API requests          | —             |
 | `POSTGRES_HOST`            | PostgreSQL host                          | `mcradar-db`  |
 | `POSTGRES_PASSWORD`        | PostgreSQL password                      | —             |
 | `POSTGRES_DB`              | PostgreSQL database name                 | `postgres`    |
