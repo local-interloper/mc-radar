@@ -47,6 +47,9 @@ services:
     image: local-interloper/mcradar-gui
     build:
       context: ./mcradar-gui
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_API_PROTOCOL: ${VITE_API_PROTOCOL}
 
     env_file: .env
 
